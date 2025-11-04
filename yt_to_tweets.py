@@ -2,8 +2,8 @@
 from youtube_transcript_api import YouTubeTranscriptApi
 import google.generativeai as genai
 
-# === PASTE YOUR KEY HERE ===
-API_KEY = "AIzaSyAaNibA0ASyxbsrZTm0wt0mzQh42qKnQEE"  # ← REPLACE WITH YOUR ACTUAL KEY
+
+API_KEY = "AIzaSyAaNibA0ASyxbsrZTm0wt0mzQh42qKnQEE" 
 
 genai.configure(api_key=API_KEY)
 
@@ -16,16 +16,15 @@ def get_transcript(video_id):
 
 def yt_to_tweets(url):
     print("AI Working...")
-    # Extract video_id from URL
+    
     if "v=" in url:
         video_id = url.split("v=")[1].split("&")[0]
     else:
         video_id = url.split("/")[-1]
     
-    # Get real transcript
-    transcript = get_transcript(video_id)
     
-    # CURRENT STABLE MODEL (NOV 2025) - gemini-2.0-flash
+    transcript = get_transcript(video_id)
+
     model = genai.GenerativeModel('gemini-2.0-flash')
     prompt = f"""
     Use this YouTube transcript to create 30 engaging tweets.
@@ -44,14 +43,14 @@ def yt_to_tweets(url):
         response = model.generate_content(prompt)
         lines = response.text.strip().split('\n')
         tweets = [line.strip() for line in lines if line.strip() and len(line.strip()) < 280 and '#' in line]
-        # Ensure exactly 30 (fallback if short)
+        
         while len(tweets) < 30:
             tweets.append(f"#{len(tweets)+1}/30 Continuing the thread with more insights... 🎵")
         return tweets[:30]
     except Exception as e:
         return [f"Error: {str(e)}"] * 30
 
-# === TEST ===
+
 if __name__ == "__main__":
     test_url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
     tweets = yt_to_tweets(test_url)
