@@ -26,19 +26,31 @@ def yt_to_tweets(url):
     transcript = get_transcript(video_id)
 
     model = genai.GenerativeModel('gemini-2.0-flash')
-    prompt = f"""
-    Use this YouTube transcript to create 30 engaging tweets.
-    Transcript: {transcript[:4000]}  # Limit length
-    
-    Rules:
-    - Each tweet under 280 characters
-    - Number them: #1/30, #2/30, etc.
-    - Add 1 relevant emoji per tweet
-    - Make them viral and thread-like
-    - Last tweet: Watch full video: {url}
-    
-    Output ONLY the 30 tweets, one per line. No extra text.
-    """
+    prompt =prompt = f"""
+You are a viral X/Twitter ghostwriter with 1M followers. Your threads get 10K+ likes by hooking fast, telling stories, dropping lessons, and sparking replies.
+
+From this YouTube transcript, create a 30-tweet thread that repurposes the video into engaging, skimmable content for creators/coaches/founders.
+
+Transcript: {transcript[:3800]}  # Full video content
+
+STRICT RULES:
+- EXACTLY 30 tweets, numbered #1/30 to #30/30
+- Each < 280 chars (count them)
+- 1 emoji per tweet (relevant, not overkill)
+- Structure: 
+  - Tweets 1–3: HOOK (question/confession/stat from transcript to grab attention)
+  - Tweets 4–15: STORY (narrative flow from transcript — facts, examples, build tension)
+  - Tweets 16–27: LESSONS (3–5 actionable takeaways, bold key phrases)
+  - Tweets 28–29: BUILD EXCITEMENT (tease benefits, prediction)
+  - Tweet 30: CTA ("Watch full: {url} | Reply: What's your biggest repurposing struggle? 👇")
+- Make it conversational, in creator's voice: punchy, relatable, no fluff
+- Add virality: 1 question every 5 tweets, 1 stat/confession per 10, end with share prompt
+- Output ONLY the 30 tweets, one per line. No intro/outro/extras.
+
+EXAMPLE HOOK TWEET: #1/30 Ever spent 3 hours turning 1 video into tweets? I did — until this hack saved me 20h/week 😩 Thread → 
+
+Start with a killer hook from the transcript.
+"""
     try:
         response = model.generate_content(prompt)
         lines = response.text.strip().split('\n')
