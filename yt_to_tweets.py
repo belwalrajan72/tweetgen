@@ -2,7 +2,8 @@ from youtube_transcript_api import YouTubeTranscriptApi
 import google.generativeai as genai
 import streamlit as st
 
-API_KEY = st.secrets["AIzaSyAaNibA0ASyxbsrZTm0wt0mzQh42qKnQEE"]
+API_KEY = "AIzaSyAaNibA0ASyxbsrZTm0wt0mzQh42qKnQEE"
+
 genai.configure(api_key=API_KEY)
 
 def get_transcript(video_id):
